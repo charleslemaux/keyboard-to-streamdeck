@@ -10,19 +10,21 @@ static void key_handler(sfKeyCode key_code)
     switch (key_code) {
         case sfKeyNumpad5:
             exit(EXIT_FAILURE);
-        case sfKeyNumpad1:
+        case sfKeyNumpad0:
             opts.scene = Menu;
             break;
-        case sfKeyNumpad2:
+        case sfKeyNumpad1:
             opts.scene = Sequel;
             break;
-        case sfKeyNumpad3:
+        case sfKeyNumpad2:
             opts.scene = MainScreen;
             break;
-        case sfKeyNumpad4:
-            set_title(opts.w, opts.scene);
+        case sfKeyNumpad3:
+            opts.scene = Ending;
             break;
     }
+    if (key_code >= 75 && key_code <= 84)
+        set_title(opts.w, opts.scene);
 }
 
 static void event_handler(sfRenderWindow* w, sfEvent* e)
