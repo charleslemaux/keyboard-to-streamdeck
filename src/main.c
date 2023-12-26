@@ -1,4 +1,4 @@
-#include "includes/gl.h"
+#include "../includes/gl.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -19,6 +19,9 @@ static void key_handler(sfKeyCode key_code)
         case sfKeyNumpad3:
             opts.scene = MainScreen;
             break;
+        case sfKeyNumpad4:
+            set_title(opts.w, opts.scene);
+            break;
     }
 }
 
@@ -29,10 +32,8 @@ static void event_handler(sfRenderWindow* w, sfEvent* e)
 	switch (e->type)
 	{
         case sfEvtLostFocus:
-            printf("Lost focus\n");
             break;
         case sfEvtGainedFocus:
-            printf("Gained focus\n");
             break;
         case sfEvtKeyPressed:
             key_handler(e->key.code);
@@ -43,28 +44,21 @@ static void event_handler(sfRenderWindow* w, sfEvent* e)
 	}
 }
 
-static void window_manager(sfRenderWindow* w)
-{
-    //printf("Scene : %d\nWadress : %p\nKeyCode : %d\n", opts.scene, opts.w, opts.key);
-	sfRenderWindow_clear(w, sfWhite);
-	sfRenderWindow_display(w);
-}
-
 int main(int argc, char** argv)
 {
 	sfVideoMode mode = {800, 600, 32};
-	sfRenderWindow* window;
+	sfRenderWindow *window = VK_NULL_HANDLE;
 	sfEvent event;
 
-    opts.w = window;
-	window = sfRenderWindow_create(mode, "OpenGL - sim 1", sfResize | sfClose, NULL);
+	window = sfRenderWindow_create(mode, "OpenGL x CSFML", sfResize | sfClose, NULL);
 	if (!window)
-		return (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
+    opts.w = window;
 
 	while (sfRenderWindow_isOpen(window)) {
 		event_handler(window, &event);
 		window_manager(window);
 	}
 	sfRenderWindow_destroy(window);
-	return (0);
+    exit(EXIT_SUCCESS);
 }

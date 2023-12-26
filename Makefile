@@ -1,7 +1,8 @@
 includes= includes/gl.h\
 					-I/usr/include/vulkan/\
 
-SRC= main.c\
+SRC=	src/main.c\
+		src/window.c\
 
 LINKS=  -lvulkan -lcsfml-graphics -lcsfml-window -lcsfml-system -l    csfml-audio -lcsfml-network
 

@@ -16,4 +16,6 @@ typedef struct {
     sfRenderWindow* w;
     enum Scenes scene;
 } Options;
+void set_title(sfRenderWindow *w, enum Scenes s);
+void window_manager(sfRenderWindow* w);
 #endif
