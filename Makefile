@@ -5,7 +5,7 @@ includes= 	includes/gl.h\
 SRC=		src/main.c\
 			src/window.c\
 
-LINKS=  -lvulkan -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -lcsfml-network -levdev
+LINKS=  -lvulkan -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -lcsfml-network -levdev -ludev
 
 all: clean build
 
