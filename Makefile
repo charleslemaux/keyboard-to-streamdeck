@@ -11,6 +11,8 @@ LINKS=  -lvulkan -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -l
 
 all: build
 
+re : clean run
+
 run: build
 		./gl
 
@@ -18,6 +20,6 @@ build:
 	gcc $(SRC) -o gl $(includes) $(LINKS)
 
 clean:
-	rm
+	rm gl
 
 .PHONY : build
