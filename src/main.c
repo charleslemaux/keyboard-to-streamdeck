@@ -105,7 +105,7 @@ __attribute__((constructor)) int init()
     read_keyboards(&kb_array);
     free_keyboards_array(&kb_array);
 
-/*	sfVideoMode mode = {800, 600, 32};
+	sfVideoMode mode = {800, 600, 32};
 	sfRenderWindow *window = VK_NULL_HANDLE;
 	sfEvent event;
 
@@ -118,6 +118,6 @@ __attribute__((constructor)) int init()
 		event_handler(window, &event);
 		window_manager(window);
 	}
-	sfRenderWindow_destroy(window);*/
+	sfRenderWindow_destroy(window);
     return (1);
 }
