@@ -29,7 +29,7 @@ static void key_handler(sfKeyCode key_code)
             break;
     }
     if (key_code >= 75 && key_code <= 84)
-        set_title(opts.w, opts.scene);
+        set_title(opts.window, opts.scene);
 }
 
 static void event_handler(sfRenderWindow* w, sfEvent* e)
@@ -51,7 +51,7 @@ static void event_handler(sfRenderWindow* w, sfEvent* e)
 	}
 }
 
-int main(int argc, char** argv)
+void keyboard(int kb_event_nb) //TODO : Thread this.
 {
     int i = 1;
     struct libevdev *dev = NULL;
@@ -90,11 +90,9 @@ int main(int argc, char** argv)
     }
     libevdev_free(dev);
     close(fd);
-    printf("\nEXIT_SUCCESS\n");
-    exit(EXIT_SUCCESS);
 }
 
-__attribute__((constructor)) int init()
+int main()
 {
     if (geteuid() != 0) {
         char sudo[]="/usr/bin/sudo";
@@ -112,15 +110,12 @@ __attribute__((constructor)) int init()
 	window = sfRenderWindow_create(mode, "OpenGL x CSFML", sfResize | sfClose, NULL);
 	if (!window)
 		exit(EXIT_FAILURE);
-    opts.w = window;
+    opts.window = window;
 
 	while (sfRenderWindow_isOpen(window)) {
 		event_handler(window, &event);
 		window_manager(window);
 	}
 	sfRenderWindow_destroy(window);
-    return (1);
+    exit(EXIT_SUCCESS);
 }
-
-
-// TODO : Turn init() into main() and make the ACTUAL main just a threadable keyboard listener that will be accessed later by user in Menu window.

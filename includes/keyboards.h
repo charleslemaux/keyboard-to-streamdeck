@@ -11,6 +11,7 @@ typedef struct {
   int num_keyboards;
 } KeyboardArray ;
 KeyboardArray get_keyboards(void);
+Keyboards* create_keyboard(const char* dev_name, const char* dev_event_path, const char* dev_system_path);
 void read_keyboards(KeyboardArray* keyboard_array);
 void free_keyboards_array(KeyboardArray* kb_array);
 void free_keyboards(Keyboards* keyboards, int num_keyboards);

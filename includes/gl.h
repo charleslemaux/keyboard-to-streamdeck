@@ -13,7 +13,7 @@ enum Scenes {
 };
 typedef struct {
     sfKeyCode key;
-    sfRenderWindow* w;
+    sfRenderWindow* window;
     enum Scenes scene;
 } Options;
 void set_title(sfRenderWindow *w, enum Scenes s);

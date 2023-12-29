@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include "../includes/keyboards.h"
 
-static Keyboards* create_keyboard(const char* dev_name, const char* dev_event_path, const char* dev_system_path) {
+Keyboards* create_keyboard(const char* dev_name, const char* dev_event_path, const char* dev_system_path)
+{
     Keyboards* kbd = malloc(sizeof(Keyboards));
     if (kbd == NULL) {
         printf("Memory allocation failed.\n");
@@ -27,7 +28,8 @@ static Keyboards* create_keyboard(const char* dev_name, const char* dev_event_pa
     return kbd;
 }
 
-void free_keyboards(Keyboards* keyboards, int num_keyboards) {
+void free_keyboards(Keyboards* keyboards, int num_keyboards)
+{
     for (int i = 0; i < num_keyboards; ++i) {
         free(keyboards[i].dev_name);
         free(keyboards[i].dev_event_path);
@@ -74,7 +76,8 @@ static int is_keyboard_valid(const char *path)
     return (1);
 }
 
-static char* get_kb_evt_path_by_syspath(const char* syspath){
+static char* get_kb_evt_path_by_syspath(const char* syspath)
+{
     char* path = malloc(256 * sizeof(char));
     if (path == NULL) {
         return NULL;
@@ -84,7 +87,8 @@ static char* get_kb_evt_path_by_syspath(const char* syspath){
     return path;
 }
 
-KeyboardArray get_keyboards() {
+KeyboardArray get_keyboards()
+{
     struct udev *udev = udev_new();
     if (!udev) {
         printf("Failed to create udev\n");
