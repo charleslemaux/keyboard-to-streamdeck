@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <linux/input.h>
 #include <string.h>
 #include <libevdev/libevdev.h>

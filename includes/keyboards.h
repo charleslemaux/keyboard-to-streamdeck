@@ -1,5 +1,6 @@
 #ifndef OPENGL_CSFML_KEYBOARDS_H
 #define OPENGL_CSFML_KEYBOARDS_H
+#include <fcntl.h>
 int get_keyboards(void);
 typedef struct {
     int nb;

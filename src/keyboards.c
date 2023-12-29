@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "../includes/keyboards.h"
 
 static int extractInputNumber(const char *syspath)
 {
@@ -17,22 +18,20 @@ static int extractInputNumber(const char *syspath)
     return (0);
 }
 
-static int is_keyboard_valid(const char *c) //TODO : refactor this function
+static int is_keyboard_valid(const char *c)
 {
     char full_path[256];
     int event_nb = extractInputNumber(c);
-    snprintf(full_path, sizeof(full_path), "%s%d\n", "/dev/input/event", event_nb);
+    snprintf(full_path, sizeof(full_path), "%s%d", "/dev/input/event", event_nb);
 
-    printf("%s\n", full_path);
-    FILE *file = fopen(full_path, "r");
-    if (file){
-        printf("VALID\n");
-        fclose(file);
-        return (1);
-    } else {
-        printf("INVALID\n");
+    printf("%s", full_path);
+    int fd = open(full_path, O_RDONLY|O_NONBLOCK);
+    if (fd < 0) {
+        printf(" INVALID\n");
         return (0);
     }
+    printf(" VALID\n");
+    return (1);
 }
 
 int get_keyboards() {
@@ -57,8 +56,9 @@ int get_keyboards() {
         if (devtype != NULL && strcmp(devtype, "1") == 0 && name != NULL) {
             //printf("Keyboard device: %s\n", udev_device_get_syspath(dev));
             //printf("Keyboard name: %s\n", udev_device_get_property_value(dev, "NAME"));
-            if (is_keyboard_valid(udev_device_get_syspath(dev)))
-                printf("VALID\n");
+            if (is_keyboard_valid(udev_device_get_syspath(dev))) {
+                printf("");
+            }
             // TODO : Store the keyboard device information as needed
         }
         udev_device_unref(dev);
