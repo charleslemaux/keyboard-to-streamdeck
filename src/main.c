@@ -121,3 +121,6 @@ __attribute__((constructor)) int init()
 	sfRenderWindow_destroy(window);
     return (1);
 }
+
+
+// TODO : Turn init() into main() and make the ACTUAL main just a threadable keyboard listener that will be accessed later by user in Menu window.
