@@ -9,15 +9,15 @@ SRC=		src/main.c\
 
 LINKS=  -lvulkan -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -lcsfml-network -levdev -ludev
 
-all: clean build
+all: build
 
 run: build
-		./gl.exe
+		./gl
 
 build:
-	gcc $(SRC) -o gl.exe $(includes) $(LINKS)
+	gcc $(SRC) -o gl $(includes) $(LINKS)
 
 clean:
-	rm gl.exe
+	rm
 
 .PHONY : build
