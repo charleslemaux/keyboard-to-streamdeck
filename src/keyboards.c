@@ -104,9 +104,9 @@ KeyboardArray get_keyboards() {
     udev_list_entry_foreach(entry, devices) {
         const char *path = udev_list_entry_get_name(entry);
         struct udev_device *dev = udev_device_new_from_syspath(udev, path);
-        const char *devtype = udev_device_get_property_value(dev, "ID_INPUT_KEYBOARD");
+        const char *device_type = udev_device_get_property_value(dev, "ID_INPUT_KEYBOARD");
         const char *name = udev_device_get_property_value(dev, "NAME");
-        if (devtype != NULL && strcmp(devtype, "1") == 0 && name != NULL) {
+        if (device_type != NULL && strcmp(device_type, "1") == 0 && name != NULL) {
             if (is_keyboard_valid(get_kb_evt_path_by_syspath(udev_device_get_syspath(dev)))) {
                 keyboards = realloc(keyboards, (num_keyboards + 1) * sizeof(Keyboards));
                 if (keyboards == NULL) {
