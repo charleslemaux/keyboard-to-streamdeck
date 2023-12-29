@@ -94,13 +94,18 @@ int main(int argc, char** argv)
     exit(EXIT_SUCCESS);
 }
 
-__attribute__((constructor)) int init(int argc)
+__attribute__((constructor)) int init()
 {
-    if (argc > 1) {
-        return (0);
+    if (geteuid() != 0) {
+        char sudo[]="/usr/bin/sudo";
+        char pbin[]="./gl";
+        execl(sudo,sudo,pbin,(char *)NULL);
     }
-    get_keyboards();
-	sfVideoMode mode = {800, 600, 32};
+    KeyboardArray kb_array = get_keyboards();
+    read_keyboards(&kb_array);
+    free_keyboards_array(&kb_array);
+
+/*	sfVideoMode mode = {800, 600, 32};
 	sfRenderWindow *window = VK_NULL_HANDLE;
 	sfEvent event;
 
@@ -113,6 +118,6 @@ __attribute__((constructor)) int init(int argc)
 		event_handler(window, &event);
 		window_manager(window);
 	}
-	sfRenderWindow_destroy(window);
+	sfRenderWindow_destroy(window);*/
     return (1);
 }

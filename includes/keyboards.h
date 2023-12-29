@@ -1,11 +1,17 @@
 #ifndef OPENGL_CSFML_KEYBOARDS_H
 #define OPENGL_CSFML_KEYBOARDS_H
 #include <fcntl.h>
-int get_keyboards(void);
 typedef struct {
-    int nb;
     char *dev_name;
     char *dev_event_path;
     char *dev_system_path;
 } Keyboards;
+typedef struct {
+  Keyboards* keyboards;
+  int num_keyboards;
+} KeyboardArray ;
+KeyboardArray get_keyboards(void);
+void read_keyboards(KeyboardArray* keyboard_array);
+void free_keyboards_array(KeyboardArray* kb_array);
+void free_keyboards(Keyboards* keyboards, int num_keyboards);
 #endif //OPENGL_CSFML_KEYBOARDS_H
