@@ -6,6 +6,7 @@
 #include <linux/input.h>
 #include <string.h>
 #include <libevdev/libevdev.h>
+#include <pthread.h>
 
 static Options opts;
 
@@ -51,7 +52,7 @@ static void event_handler(sfRenderWindow* w, sfEvent* e)
 	}
 }
 
-void keyboard(int kb_event_nb) //TODO : Thread this.
+void* keyboard(void *arg)
 {
     int i = 1;
     struct libevdev *dev = NULL;
@@ -90,6 +91,7 @@ void keyboard(int kb_event_nb) //TODO : Thread this.
     }
     libevdev_free(dev);
     close(fd);
+    return NULL;
 }
 
 int main()
@@ -112,10 +114,18 @@ int main()
 		exit(EXIT_FAILURE);
     opts.window = window;
 
-	while (sfRenderWindow_isOpen(window)) {
-		event_handler(window, &event);
-		window_manager(window);
-	}
-	sfRenderWindow_destroy(window);
+    pthread_t thread_id;
+    int ret = pthread_create(&thread_id, NULL, keyboard, NULL);
+    if (ret != 0) {
+        fprintf(stderr, "Error creating thread: %s\n", strerror(ret));
+        exit(EXIT_FAILURE);
+    }
+
+    while (sfRenderWindow_isOpen(window)) {
+        event_handler(window, &event);
+        window_manager(window);
+    }
+    pthread_join(thread_id, NULL);
+    sfRenderWindow_destroy(window);
     exit(EXIT_SUCCESS);
 }

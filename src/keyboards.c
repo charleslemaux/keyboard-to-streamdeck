@@ -126,7 +126,6 @@ KeyboardArray get_keyboards()
         }
         udev_device_unref(dev);
     }
-
     KeyboardArray keyboards_array = {keyboards, num_keyboards};
 
     udev_enumerate_unref(enumerate);
