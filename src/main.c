@@ -1,12 +1,5 @@
 #include "../includes/gl.h"
 #include "../includes/keyboards.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <linux/input.h>
-#include <string.h>
-#include <libevdev/libevdev.h>
-#include <pthread.h>
 
 static Options opts;
 
@@ -27,6 +20,9 @@ static void key_handler(sfKeyCode key_code)
             break;
         case sfKeyNumpad3:
             opts.scene = Ending;
+            break;
+        case sfKeyNumpad4:
+            create_kb_thread();
             break;
     }
     if (key_code >= 75 && key_code <= 84)
@@ -52,48 +48,6 @@ static void event_handler(sfRenderWindow* w, sfEvent* e)
 	}
 }
 
-void* keyboard(void *arg)
-{
-    int i = 1;
-    struct libevdev *dev = NULL;
-    int fd;
-    int rc;
-
-    fd = open("/dev/input/event3", O_RDONLY|O_NONBLOCK); //TODO : Keyboard listener (from /dev/input/by-id)
-    if (fd < 0) {
-        perror("Failed to open the input device");
-        exit(EXIT_FAILURE);
-    }
-
-    rc = libevdev_new_from_fd(fd, &dev);
-    if (rc < 0) {
-        perror("Failed to init libevdev");
-        close(fd);
-        exit(EXIT_FAILURE);
-    }
-
-    while(i) {
-        struct input_event ev;
-        rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
-        if (rc == 0 && ev.type == EV_KEY && ev.value == 1) {
-            switch (ev.code) {
-                case KEY_SPACE:
-                    printf("Spacebar pressed\n");
-                    break;
-                case KEY_X:
-                    printf("X pressed\n");
-                    break;
-                case KEY_TAB:
-                    i = 0;
-                    break;
-            }
-        }
-    }
-    libevdev_free(dev);
-    close(fd);
-    return NULL;
-}
-
 int main()
 {
     if (geteuid() != 0) {
@@ -114,12 +68,7 @@ int main()
 		exit(EXIT_FAILURE);
     opts.window = window;
 
-    pthread_t thread_id;
-    int ret = pthread_create(&thread_id, NULL, keyboard, NULL);
-    if (ret != 0) {
-        fprintf(stderr, "Error creating thread: %s\n", strerror(ret));
-        exit(EXIT_FAILURE);
-    }
+    pthread_t thread_id = create_kb_thread();
 
     while (sfRenderWindow_isOpen(window)) {
         event_handler(window, &event);

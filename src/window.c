@@ -38,13 +38,11 @@ static void draw_button(sfRenderWindow *w, float scale, const char* text)
     sfText_setString(buttonText, text);
     sfText_setCharacterSize(buttonText, (unsigned int)(20 * scale));
 
-
-
-    sfFloatRect textBounds = sfText_getLocalBounds(buttonText);
     sfFloatRect buttonBounds = sfRectangleShape_getGlobalBounds(rect);
+    sfFloatRect textBounds = sfText_getLocalBounds(buttonText);
     sfVector2f textPos;
-    textPos.x = buttonBounds.left + (buttonBounds.width - textBounds.width) / 2;
-    textPos.y = buttonBounds.top + (buttonBounds.height - (textBounds.height + textBounds.top - textBounds.top)) / 2;
+    textPos.x = buttonBounds.left + (buttonBounds.width - sfText_getLocalBounds(buttonText).width) / 2;
+    textPos.y = buttonBounds.top + (buttonBounds.height - textBounds.height) / 2 - textBounds.top;
     sfText_setPosition(buttonText, textPos);
 
     sfRenderWindow_drawRectangleShape(w, rect, NULL);
@@ -55,9 +53,10 @@ static void draw_button(sfRenderWindow *w, float scale, const char* text)
     sfRectangleShape_destroy(rect);
 }
 
+
 void window_manager(sfRenderWindow* w)
 {
-    sfRenderWindow_clear(w, sfWhite);
-    draw_button(w, 1.f, "Test !");
+    sfRenderWindow_clear(w, sfBlack);
+    draw_button(w, 6.f, "yepechipitapito");
     sfRenderWindow_display(w);
 }
