@@ -151,11 +151,17 @@ void* keyboard(void *arg)
         exit(EXIT_FAILURE);
     }
 
+    if (ioctl(fd, EVIOCGRAB, 1) == -1) {
+        perror("Failed to grab the keyboard");
+        close(fd);
+        exit(EXIT_FAILURE);
+    }
+
     while(can_listen) {
         struct input_event ev;
         rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
         if (rc == 0 && ev.type == EV_KEY && ev.value == 1) {
-            __u16 test = ev.code;
+            printf("%u pressed\n", (unsigned int)ev.code);
             switch (ev.code) {
                 case KEY_SPACE:
                     printf("Spacebar pressed\n");
@@ -169,6 +175,7 @@ void* keyboard(void *arg)
             }
         }
     }
+    ioctl(fd, EVIOCGRAB, 0);
     libevdev_free(dev);
     close(fd);
     can_listen = 1;
