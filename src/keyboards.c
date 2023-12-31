@@ -1,7 +1,5 @@
 #include "../includes/keyboards.h"
 
-volatile int can_listen = 1;
-
 Keyboards* create_keyboard(const char* dev_name, const char* dev_event_path, const char* dev_system_path)
 {
     Keyboards* kbd = malloc(sizeof(Keyboards));
@@ -132,60 +130,11 @@ KeyboardArray get_keyboards()
     return keyboards_array;
 }
 
-void* keyboard(void *arg)
-{
-    struct libevdev *dev = NULL;
-    int fd;
-    int rc;
-
-    fd = open("/dev/input/event3", O_RDONLY|O_NONBLOCK); //TODO : Keyboard listener (from /dev/input/by-id)
-    if (fd < 0) {
-        perror("Failed to open the input device");
-        exit(EXIT_FAILURE);
-    }
-
-    rc = libevdev_new_from_fd(fd, &dev);
-    if (rc < 0) {
-        perror("Failed to init libevdev");
-        close(fd);
-        exit(EXIT_FAILURE);
-    }
-
-    if (ioctl(fd, EVIOCGRAB, 1) == -1) {
-        perror("Failed to grab the keyboard");
-        close(fd);
-        exit(EXIT_FAILURE);
-    }
-
-    while(can_listen) {
-        struct input_event ev;
-        rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
-        if (rc == 0 && ev.type == EV_KEY && ev.value == 1) {
-            printf("%u pressed\n", (unsigned int)ev.code);
-            switch (ev.code) {
-                case KEY_SPACE:
-                    printf("Spacebar pressed\n");
-                    break;
-                case KEY_X:
-                    printf("X pressed\n");
-                    break;
-                case KEY_TAB:
-                    can_listen = 0;
-                    break;
-            }
-        }
-    }
-    ioctl(fd, EVIOCGRAB, 0);
-    libevdev_free(dev);
-    close(fd);
-    can_listen = 1;
-    return NULL;
-}
-
 pthread_t create_kb_thread()
 {
     pthread_t thread_id;
-    int ret = pthread_create(&thread_id, NULL, keyboard, NULL);
+    char* path = "/dev/input/event3";
+    int ret = pthread_create(&thread_id, NULL, keyboard_listen, path);
     if (ret != 0) {
         fprintf(stderr, "Error creating thread: %s\n", strerror(ret));
         exit(EXIT_FAILURE);

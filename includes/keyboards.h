@@ -23,7 +23,6 @@ Keyboards* create_keyboard(const char* dev_name, const char* dev_event_path, con
 void read_keyboards(KeyboardArray* keyboard_array);
 void free_keyboards_array(KeyboardArray* kb_array);
 void free_keyboards(Keyboards* keyboards, int num_keyboards);
-extern volatile int can_listen;
-void* keyboard(void *arg);
+void* keyboard_listen(void *arg);
 pthread_t create_kb_thread();
 #endif //OPENGL_CSFML_KEYBOARDS_H

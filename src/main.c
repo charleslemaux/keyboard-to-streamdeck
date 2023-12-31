@@ -1,7 +1,6 @@
 #include "../includes/gl.h"
-#include "../includes/keyboards.h"
 
-static Options opts;
+static Options opts = {0};
 
 static void key_handler(sfKeyCode key_code)
 {
@@ -48,7 +47,7 @@ static void event_handler(sfRenderWindow* w, sfEvent* e)
 	}
 }
 
-int main()
+int main(int argc, char **argv)
 {
     if (geteuid() != 0) {
         char sudo[]="/usr/bin/sudo";
@@ -57,24 +56,28 @@ int main()
     }
     KeyboardArray kb_array = get_keyboards();
     read_keyboards(&kb_array);
-    free_keyboards_array(&kb_array);
 
-	sfVideoMode mode = {800, 600, 32};
-	sfRenderWindow *window = VK_NULL_HANDLE;
-	sfEvent event;
+    sfVideoMode mode = {800, 600, 32};
+    sfRenderWindow *window = VK_NULL_HANDLE;
+    sfEvent event;
 
-	window = sfRenderWindow_create(mode, "OpenGL x CSFML", sfResize | sfClose, NULL);
-	if (!window)
-		exit(EXIT_FAILURE);
+    window = sfRenderWindow_create(mode, "OpenGL x CSFML", sfResize | sfClose, NULL);
+    if (!window) {
+        exit(EXIT_FAILURE);
+    }
     opts.window = window;
 
     pthread_t thread_id = create_kb_thread();
 
+    init_menu_ui();
     while (sfRenderWindow_isOpen(window)) {
         event_handler(window, &event);
-        window_manager(window);
+        window_manager(window, &kb_array);
+        usleep(20000); // 20ms
     }
+
     pthread_join(thread_id, NULL);
     sfRenderWindow_destroy(window);
+    free_keyboards_array(&kb_array);
     exit(EXIT_SUCCESS);
 }

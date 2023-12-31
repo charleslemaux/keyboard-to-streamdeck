@@ -5,7 +5,9 @@ includes= 	includes/gl.h\
 
 SRC=		src/main.c\
 			src/window.c\
+			src/menu_ui.c\
 			src/keyboards.c\
+			src/keyboard_listener.c\
 
 LINKS=  -lvulkan -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -lcsfml-network -levdev -ludev
 

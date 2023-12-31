@@ -1,7 +1,8 @@
-#include "../includes/san-francisco.h"
 #include "../includes/gl.h"
 #include <stdlib.h>
 #include <string.h>
+
+static enum Scenes s;
 
 const char* ScenesNames[] = {
         "Menu",
@@ -10,9 +11,9 @@ const char* ScenesNames[] = {
         "Ending",
 };
 
-void set_title(sfRenderWindow *w, enum Scenes s)
+void set_title(sfRenderWindow *w, enum Scenes scene)
 {
-    int i = 17;
+    s = scene;
     char *title = (char *)malloc(25  * sizeof(char));
     title[24] = '\0';
 
@@ -23,7 +24,7 @@ void set_title(sfRenderWindow *w, enum Scenes s)
     free(title);
 }
 
-static void draw_button(sfRenderWindow *w, float scale, const char* text)
+/*static void draw_button(sfRenderWindow *w, float scale, const char* text)
 {
     sfRectangleShape* rect = sfRectangleShape_create();
     sfVector2u windowSize = sfRenderWindow_getSize(w);
@@ -51,12 +52,11 @@ static void draw_button(sfRenderWindow *w, float scale, const char* text)
     sfText_destroy(buttonText);
     sfFont_destroy(font);
     sfRectangleShape_destroy(rect);
-}
+}*/
 
-
-void window_manager(sfRenderWindow* w)
+void window_manager(sfRenderWindow* w, KeyboardArray* kb_array)
 {
     sfRenderWindow_clear(w, sfBlack);
-    draw_button(w, 6.f, "yepechipitapito");
+    menu_ui_renderer(w, kb_array);
     sfRenderWindow_display(w);
 }
