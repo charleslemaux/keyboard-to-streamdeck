@@ -1,6 +1,6 @@
 #include "../includes/gl.h"
 
-static Options opts = {0};
+Options opts = {0};
 
 static void key_handler(sfKeyCode key_code)
 {
@@ -23,6 +23,8 @@ static void key_handler(sfKeyCode key_code)
         case sfKeyNumpad4:
             create_kb_thread();
             break;
+        default:
+            break;
     }
     if (key_code >= 75 && key_code <= 84)
         set_title(opts.window, opts.scene);
@@ -34,16 +36,20 @@ static void event_handler(sfRenderWindow* w, sfEvent* e)
 		return;
 	switch (e->type)
 	{
-        case sfEvtLostFocus:
-            break;
         case sfEvtGainedFocus:
+            break;
+        case sfEvtResized:
+            update_view(e->size.width, e->size.height);
+            gSize = sfRenderWindow_getSize(w);
             break;
         case sfEvtKeyPressed:
             key_handler(e->key.code);
             break;
-            case sfEvtClosed:
+        case sfEvtClosed:
 			sfRenderWindow_close(w);
 			break;
+        default:
+            break;
 	}
 }
 
@@ -54,26 +60,24 @@ int main(int argc, char **argv)
         char pbin[]="./gl";
         execl(sudo,sudo,pbin,(char *)NULL);
     }
-    KeyboardArray kb_array = get_keyboards();
-    read_keyboards(&kb_array);
 
     sfVideoMode mode = {800, 600, 32};
+    sfContextSettings settings = {46, 6, 0};
     sfRenderWindow *window = VK_NULL_HANDLE;
     sfEvent event;
 
-    window = sfRenderWindow_create(mode, "OpenGL x CSFML", sfResize | sfClose, NULL);
-    if (!window) {
+    window = sfRenderWindow_create(mode, "OpenGL x CSFML - Menu", sfResize | sfClose, NULL);
+    if (!window)
         exit(EXIT_FAILURE);
-    }
     opts.window = window;
 
     pthread_t thread_id = create_kb_thread();
 
-    init_menu_ui();
+    init_smfl(window);
     while (sfRenderWindow_isOpen(window)) {
         event_handler(window, &event);
-        window_manager(window, &kb_array);
-        usleep(20000); // 20ms
+        window_manager(window);
+        usleep(5000); // 5ms
     }
 
     pthread_join(thread_id, NULL);

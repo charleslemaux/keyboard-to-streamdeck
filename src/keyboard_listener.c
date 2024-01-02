@@ -1,6 +1,21 @@
 #include "../includes/keyboards.h"
 #include <stdbool.h>
 
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+
+static void lua(const char* script)
+{
+        lua_State *L = luaL_newstate();
+        luaL_openlibs(L);
+        if (luaL_dofile(L, script)) {
+            fprintf(stderr, "Error loading %s: %s\n", script, lua_tostring(L, -1));
+            lua_pop(L, 1);
+        }
+        lua_close(L);
+}
+
 static int file_descriptor_check(const char* path)
 {
     int fd = open(path, O_RDONLY|O_NONBLOCK);
@@ -20,6 +35,9 @@ static bool input_checker(struct input_event* ev) {
             break;
         case KEY_X:
             printf("X pressed\n");
+            break;
+        case KEY_CAPSLOCK:
+            lua("lua/test.lua");
             break;
         case KEY_TAB:
             return false;

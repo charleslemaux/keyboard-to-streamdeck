@@ -7,9 +7,10 @@ SRC=		src/main.c\
 			src/window.c\
 			src/menu_ui.c\
 			src/keyboards.c\
+			src/sfml_utils.c\
 			src/keyboard_listener.c\
 
-LINKS=  -lvulkan -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -lcsfml-network -levdev -ludev
+LINKS=  -lvulkan -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -lcsfml-network -levdev -ludev -llua
 
 all: build
 

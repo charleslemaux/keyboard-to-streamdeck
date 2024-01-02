@@ -1,53 +1,52 @@
 #include "../includes/gl.h"
-#include "../includes/san-francisco.h"
 
-sfFont* gFont = NULL;
 sfText* kbList = NULL;
-sfText* buttonText = NULL;
+sfFloatRect bounds = {0};
+KeyboardArray kb_array;
 
-static void draw_kb_menu(sfRenderWindow *w, KeyboardArray* kb_array)
+//FPS SPECIFIC
+sfClock* gClock;
+sfTime gTime;
+sfText* fpsText;
+static char* fpsToString(double fps){static char str[50];sprintf(str, "FPS: %.1f", fps);return str;}
+static void draw_fps_counter(sfRenderWindow *w)
 {
-    for (int i = 0; i < kb_array->num_keyboards; i++) {
-        sfText_setPosition(kbList, (sfVector2f){20, (float)(50 + i * 30)});
-        sfText_setString(kbList, kb_array->keyboards[i].dev_name);
+    gTime = sfClock_getElapsedTime(gClock);
+    double fps = 1.0 / sfTime_asSeconds(gTime);
+
+    sfText_setString(fpsText, fpsToString(fps));
+    sfRenderWindow_drawText(w, fpsText, NULL);
+    sfClock_restart(gClock);
+}
+//FPS SPECIFIC
+
+static void draw_kb_menu(sfRenderWindow *w)
+{
+    float totalHeight = bounds.height * (float)kb_array.num_keyboards;
+    float startY = ((float)gSize.y / 2.0f) - (totalHeight / 2.0f);
+
+    for (int i = 0; i < kb_array.num_keyboards; i++) {
+        sfText_setPosition(kbList, (sfVector2f){20, (startY + (bounds.height + (float)i * 30))});
+        sfText_setString(kbList, kb_array.keyboards[i].dev_name);
         sfRenderWindow_drawText(w, kbList, NULL);
     }
 }
 
-static void draw_close_button(sfRenderWindow* window, float scale) {
-    sfVector2u windowSize = sfRenderWindow_getSize(window);
-    sfVector2f size = {50 * scale, 50 * scale};
-    sfVector2f pos = {(float)windowSize.x - size.x, (float)windowSize.y - size.y};
-
-    sfVertexArray* lines = sfVertexArray_create();
-    sfVertexArray_resize(lines, 4);
-
-    sfVertex line1 = {pos, sfColor_fromRGB(255, 0, 0)};
-    sfVertex line2 = {pos.x + size.x, pos.y + size.y, sfColor_fromRGB(255, 0, 0)};
-    sfVertex line3 = {pos.x, pos.y + size.y, sfColor_fromRGB(255, 0, 0)};
-    sfVertex line4 = {pos.x + size.x, pos.y, sfColor_fromRGB(255, 0, 0)};
-
-    sfVertexArray_setPrimitiveType(lines, sfLinesStrip);
-    sfVertexArray_append(lines, line1);
-    sfVertexArray_append(lines, line2);
-    sfVertexArray_append(lines, line3);
-    sfVertexArray_append(lines, line4);
-
-    sfRenderWindow_drawVertexArray(window, lines, NULL);
-
-    sfVertexArray_destroy(lines);
-}
-
 void init_menu_ui(void)
 {
-    gFont = sfFont_createFromMemory((void *)SFNSDisplay_Regular_otf, SFNSDisplay_Regular_otf_len);
-    kbList = sfText_create();
-    sfText_setFont(kbList, gFont);
-    sfText_setCharacterSize(kbList, (unsigned int)(20));
+    kb_array = get_keyboards();
+    read_keyboards(&kb_array);
+    kbList = create_text("", sfBlack);
+
+    //FPS SPECIFIC
+    gClock = sfClock_create();
+    fpsText = create_text("", sfBlack);
+    //FPS SPECIFIC
 }
 
-void menu_ui_renderer(sfRenderWindow* w, KeyboardArray* kb_array)
+void menu_ui_renderer(sfRenderWindow* w)
 {
-    draw_kb_menu(w, kb_array);
-    draw_close_button(w, 1.f);
+    bounds = sfText_getLocalBounds(kbList);
+    draw_fps_counter(w);
+    draw_kb_menu(w);
 }
