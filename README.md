@@ -1,4 +1,4 @@
-# OpenGL x CSMFL
-Working with CSFML, the official binding of the SFML library in C and openGL; render different scenes and handle events for low level software developpement.
+# Keyboard x Streamdeck
+This program allows the user to rebind a keyboard and associate keys with lua scripts to re-create the feeling of a streamdeck.
 
 ###### This branch is for keyboard management / library only.
