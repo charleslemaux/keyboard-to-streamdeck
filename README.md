@@ -1,4 +1,5 @@
-# Keyboard x Streamdeck
+# Keyboard -> Streamdeck
 This program allows the user to rebind a keyboard and associate keys with lua scripts to re-create the feeling of a streamdeck.
+The graphic library is to be changed to be compatible with vulkan.
 
 ###### This branch is for keyboard management / library only.
