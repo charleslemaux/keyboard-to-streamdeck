@@ -36,8 +36,11 @@ static bool input_checker(struct input_event* ev) {
         case KEY_X:
             printf("X pressed\n");
             break;
+        case KEY_GRAVE:
+            lua("lua/hello_world.lua");
+            break;
         case KEY_CAPSLOCK:
-            lua("lua/test.lua");
+            lua("lua/http.lua");
             break;
         case KEY_TAB:
             return false;
@@ -98,9 +101,10 @@ void* keyboard_listen(void *arg) {
 
     init_device(fd, &dev);
     grab_keyboard(fd);
+
     event_listener(fd, dev, &can_listen);
+
     releaseKeyboard(fd);
     freeResources(dev, fd);
-
     pthread_exit(NULL);
 }

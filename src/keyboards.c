@@ -34,9 +34,9 @@ void free_keyboards(Keyboards* keyboards, int num_keyboards)
     free(keyboards);
 }
 
-void free_keyboards_array(KeyboardArray* kb_array)
+void free_keyboards_array(KeyboardArray* keyboard_array)
 {
-    free_keyboards(kb_array->keyboards, kb_array->num_keyboards);
+    free_keyboards(keyboard_array->keyboards, keyboard_array->num_keyboards);
 }
 
 void read_keyboards(KeyboardArray* keyboard_array)
