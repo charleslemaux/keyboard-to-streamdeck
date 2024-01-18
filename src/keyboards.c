@@ -133,7 +133,7 @@ KeyboardArray get_keyboards()
 pthread_t create_kb_thread()
 {
     pthread_t thread_id;
-    char* path = "/dev/input/event3";
+    char* path = "/dev/input/event8";
     int ret = pthread_create(&thread_id, NULL, keyboard_listen, path);
     if (ret != 0) {
         fprintf(stderr, "Error creating thread: %s\n", strerror(ret));

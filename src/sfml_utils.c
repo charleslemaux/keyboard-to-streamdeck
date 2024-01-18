@@ -2,6 +2,7 @@
 #include "../includes/san-francisco.h"
 
 sfFont* gFont = NULL;
+sfSprite * gSprite = NULL;
 sfVector2u gSize = {0};
 
 sfText *create_text(const char *textStr, sfColor color)
@@ -24,6 +25,7 @@ void update_view(unsigned int w, unsigned int h)
 
 void init_smfl(sfRenderWindow* w)
 {
+    gSprite = sfSprite_create();
     gFont = sfFont_createFromMemory((void *)SFNSDisplay_Regular_otf, SFNSDisplay_Regular_otf_len);
     if (!gFont)
         exit(EXIT_FAILURE);

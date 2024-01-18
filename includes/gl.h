@@ -18,7 +18,8 @@ typedef struct {
     sfKeyCode key;
     sfRenderWindow* window;
     enum Scenes scene;
-    short chosen_kb;
+    KeyboardArray keyboards;
+    unsigned short chosen_kb;
 } Options;
 extern Options opts;
 

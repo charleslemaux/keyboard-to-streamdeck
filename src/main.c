@@ -1,6 +1,7 @@
 #include "../includes/gl.h"
 
-Options opts = {0};
+Options opts = {.chosen_kb = 0,
+                .scene = Menu,};
 
 static void key_handler(sfKeyCode key_code)
 {
@@ -45,6 +46,9 @@ static void event_handler(sfRenderWindow* w, sfEvent* e)
         case sfEvtKeyPressed:
             key_handler(e->key.code);
             break;
+            case sfEvtMouseWheelScrolled:
+                create_kb_thread();
+                break;
         case sfEvtClosed:
 			sfRenderWindow_close(w);
 			break;
@@ -71,8 +75,6 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     opts.window = window;
 
-    pthread_t thread_id = create_kb_thread();
-
     init_smfl(window);
     while (sfRenderWindow_isOpen(window)) {
         event_handler(window, &event);
@@ -80,7 +82,6 @@ int main(int argc, char **argv)
         usleep(5000); // 5ms
     }
 
-    pthread_join(thread_id, NULL);
     sfRenderWindow_destroy(window);
     free_keyboards_array(&kb_array);
     exit(EXIT_SUCCESS);
