@@ -5,15 +5,17 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
-static void lua(const char* script)
+static bool lua(const char* script)
 {
         lua_State *L = luaL_newstate();
         luaL_openlibs(L);
-        if (luaL_dofile(L, script)) {
+        bool script_state = luaL_dofile(L, script);
+        if (script_state) {
             fprintf(stderr, "Error loading %s: %s\n", script, lua_tostring(L, -1));
             lua_pop(L, 1);
         }
         lua_close(L);
+        return script_state;
 }
 
 static int file_descriptor_check(const char* path)
@@ -27,24 +29,11 @@ static int file_descriptor_check(const char* path)
     }
 }
 
-static bool input_checker(struct input_event* ev) {
-    printf("%u pressed\n", (unsigned int) ev->code);
-    switch (ev->code) {
-        case KEY_SPACE:
-            printf("Spacebar pressed\n");
-            break;
-        case KEY_X:
-            printf("X pressed\n");
-            break;
-        case KEY_GRAVE:
-            lua("lua/hello_world.lua");
-            break;
-        case KEY_CAPSLOCK:
-            lua("lua/http.lua");
-            break;
-        case KEY_TAB:
-            return false;
-    }
+static bool input_checker(struct input_event* ev)
+{
+    char path[256];
+    snprintf(path, 50, "lua/%u.lua", (unsigned int) ev->code);
+    lua(path);
     return true;
 }
 

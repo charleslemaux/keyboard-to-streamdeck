@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <libevdev/libevdev.h>
+#include <libevdev-1.0/libevdev/libevdev.h>
 #include <unistd.h>
 #include <pthread.h>
 
@@ -24,7 +24,7 @@ typedef struct {
 extern KeyboardArray kb_array;
 KeyboardArray get_keyboards(void);
 Keyboards* create_keyboard(const char* dev_name, const char* dev_event_path, const char* dev_system_path);
-pthread_t create_kb_thread();
+pthread_t create_kb_thread(const char *dev_event_path);
 
 //Utils
 void read_keyboards(KeyboardArray* keyboard_array);

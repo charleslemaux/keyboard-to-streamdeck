@@ -42,6 +42,7 @@ void free_keyboards_array(KeyboardArray* keyboard_array)
 void read_keyboards(KeyboardArray* keyboard_array)
 {
     for (int i = 0; i < keyboard_array->num_keyboards; ++i) {
+        printf("N°%d\n", i);
         printf("Name: %s\n", keyboard_array->keyboards[i].dev_name);
         printf("Event Path: %s\n", keyboard_array->keyboards[i].dev_event_path);
         printf("System Path: %s\n\n", keyboard_array->keyboards[i].dev_system_path);
@@ -130,11 +131,11 @@ KeyboardArray get_keyboards()
     return keyboards_array;
 }
 
-pthread_t create_kb_thread()
+pthread_t create_kb_thread(const char *dev_event_path)
 {
     pthread_t thread_id;
-    char* path = "/dev/input/event3";
-    int ret = pthread_create(&thread_id, NULL, keyboard_listen, path);
+    //char* path = "/dev/input/event3";
+    int ret = pthread_create(&thread_id, NULL, keyboard_listen, (void *)dev_event_path);
     if (ret != 0) {
         fprintf(stderr, "Error creating thread: %s\n", strerror(ret));
         exit(EXIT_FAILURE);
